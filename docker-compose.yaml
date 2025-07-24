@@ -1,0 +1,58 @@
+services:
+
+  opensearch-with-security:
+    image: opensearchproject/opensearch:latest
+    container_name: opensearch-with-security
+    environment:
+      - discovery.type=single-node
+      - node.name=opensearch-with-security
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "OPENSEARCH_INITIAL_ADMIN_PASSWORD=zn9yT(A&9FDwR#LD(@JD7H79]rj2gQdC"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch-with-security-data:/usr/share/opensearch/data
+    ports:
+      - 9243:9200
+      - 9643:9600
+    networks:
+      - opensearch-with-security-net
+
+  opensearch-without-security:
+    image: opensearchproject/opensearch:latest
+    container_name: opensearch-without-security
+    environment:
+      - discovery.type=single-node
+      - node.name=opensearch-without-security
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "DISABLE_INSTALL_DEMO_CONFIG=true"
+      - "DISABLE_SECURITY_PLUGIN=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch-without-security-data:/usr/share/opensearch/data
+    ports:
+      - 9200:9200
+      - 9600:9600
+    networks:
+      - opensearch-without-security-net
+
+volumes:
+  opensearch-with-security-data:
+  opensearch-without-security-data:
+
+networks:
+  opensearch-with-security-net:
+  opensearch-without-security-net:

@@ -1,0 +1,15 @@
+{
+  "name": "k6-tryouts",
+  "version": "1.0.0",
+  "description": "k6 tryouts",
+  "license": "ISC",
+  "author": "kret",
+  "type": "commonjs",
+  "main": "opse-without-security.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/k6": "^1.1.1"
+  }
+}

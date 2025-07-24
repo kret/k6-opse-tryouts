@@ -1,0 +1,15 @@
+### sanity check
+GET {{baseUrl}}
+Authorization: {{auth}}
+
+### get /demo
+GET {{baseUrl}}/demo
+Authorization: {{auth}}
+
+### count /demo
+GET {{baseUrl}}/demo/_count
+Authorization: {{auth}}
+
+### count /demo
+GET {{baseUrl}}/_cat/indices?v
+Authorization: {{auth}}
