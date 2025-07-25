@@ -1,8 +1,11 @@
 import http from 'k6/http';
+import { check } from 'k6';
 
 export const options = {
     iterations: 1,
     insecureSkipTLSVerify: true,
+    // httpDebug: 'full',
+    throw: true,
 };
 
 export default function() {
@@ -24,7 +27,12 @@ export default function() {
         mappings: {
             properties: {
                 name: {
-                    type: 'keyword',
+                    type: 'text',
+                    fields: {
+                        keyword: {
+                            type: 'keyword',
+                        }
+                    }
                 },
                 age: {
                     type: 'integer',
@@ -32,40 +40,37 @@ export default function() {
             }
         }
     }
-    http.put('http://localhost:9200/demo', JSON.stringify(createIndexBody), params);
-    http.put('https://localhost:9243/demo', JSON.stringify(createIndexBody), params);
-
-    for (let i = 0; i < 1_000_000; i++) {
-        const doc = {
-            name: Math.random().toString(36),
-            age: Math.ceil(Math.random() * 100),
-        }
-        http.post('http://localhost:9200/demo/_doc', JSON.stringify(doc), params);
-        http.post('https://localhost:9243/demo/_doc', JSON.stringify(doc), params);
-    }
-
-    const paramsX = {
+    check(http.put('http://localhost:9200/beings', JSON.stringify(createIndexBody), params), {
+        'status is 200': val => (res) => res.status === 200,
+    });
+    check(http.put('https://localhost:9243/beings', JSON.stringify(createIndexBody), params), {
+        'status is 200': val => (res) => res.status === 200,
+    });
+    
+    const paramsBulk = {
         headers: {
             Authorization: 'Basic YWRtaW46em45eVQoQSY5RkR3UiNMRChASkQ3SDc5XXJqMmdRZEM=',
             'Content-Type': 'application/x-ndjson',
         },
         compression: 'gzip',
     };
-    for (let i = 0; i < 1_000; i++) {
+    const meta = JSON.stringify({ create: {} });
+    for (let batchNumber = 0; batchNumber < 1_000; batchNumber++) {
         const docs = [];
-        for (let j = 0; j < 1_000; j++) {
-            const meta = {
-                create: {}
-            }
+        for (let docNumber = 0; docNumber < 1_000; docNumber++) {
             const doc = {
-                name: Math.random().toString(36),
+                name: (Math.random() < 0.1 ? (Math.random() < 0.5 ? 'Bird ' : 'Mole ') : '') + Math.random().toString(),
                 age: Math.ceil(Math.random() * 100),
             }
-            docs.push(JSON.stringify(meta));
+            docs.push(meta);
             docs.push(JSON.stringify(doc));
         }
-        const docsBody = docs.join('\n');
-        http.post('http://localhost:9200/demo/_bulk', docsBody, params);
-        http.post('https://localhost:9243/demo/_bulk', docsBody, params);
+        const docsBody = docs.join('\n') + '\n';
+        check(http.post('http://localhost:9200/beings/_bulk', docsBody, paramsBulk), {
+            'status is 200': val => (res) => res.status === 200,
+        });
+        check(http.post('https://localhost:9243/beings/_bulk', docsBody, paramsBulk), {
+            'status is 200': val => (res) => res.status === 200,
+        });
     }
 }

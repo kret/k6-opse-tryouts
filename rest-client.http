@@ -2,14 +2,44 @@
 GET {{baseUrl}}
 Authorization: {{auth}}
 
-### get /demo
-GET {{baseUrl}}/demo
+### get /beings
+GET {{baseUrl}}/beings
 Authorization: {{auth}}
 
-### count /demo
-GET {{baseUrl}}/demo/_count
+### count /beings
+GET {{baseUrl}}/beings/_count
 Authorization: {{auth}}
 
-### count /demo
+### count /beings
 GET {{baseUrl}}/_cat/indices?v
+Authorization: {{auth}}
+
+### show some /beings
+POST {{baseUrl}}/beings/_search
+Authorization: {{auth}}
+Content-Type: application/json
+
+{
+  "query": {
+    "match_all": {}
+  },
+  "size": 5
+}
+
+### show some /beings
+POST {{baseUrl}}/beings/_search
+Authorization: {{auth}}
+Content-Type: application/json
+
+{
+  "query": {
+    "match": {
+      "name": "Bird"
+    }
+  },
+  "size": 5
+}
+
+### drop all
+DELETE {{baseUrl}}/beings
 Authorization: {{auth}}

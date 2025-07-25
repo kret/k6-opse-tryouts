@@ -18,11 +18,11 @@ export default function() {
   const query = {
     query: {
       term: {
-        name: Math.floor(Math.random() * 1000),
+        age: Math.ceil(Math.random() * 100),
       }
     }
   }
-  const res = http.post('https://localhost:9243/demo/_search', JSON.stringify(query), params);
+  const res = http.post('https://localhost:9243/beings/_search', JSON.stringify(query), params);
   check(res, {
     "status is 200": (res) => res.status === 200,
   });

@@ -1,11 +1,10 @@
 {
-  "name": "k6-tryouts",
+  "name": "opensearch-performance-fun",
   "version": "1.0.0",
-  "description": "k6 tryouts",
+  "description": "opensearch performance fun with k6",
   "license": "ISC",
   "author": "kret",
   "type": "commonjs",
-  "main": "opse-without-security.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
